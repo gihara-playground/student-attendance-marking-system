@@ -13,7 +13,7 @@
     <children>
         <ImageView fitHeight="255.0" fitWidth="518.0" layoutX="88.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <image>
-                <Image url="@assets/loading (1).gif" />
+                <Image url="@assets/loading.gif" />
             </image>
         </ImageView>
         <Rectangle arcHeight="10.0" arcWidth="10.0" height="130.0" layoutY="183.0" stroke="TRANSPARENT" strokeLineCap="ROUND" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="0.0" width="519.0">

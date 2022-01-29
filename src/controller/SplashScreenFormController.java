@@ -21,7 +21,7 @@ public class SplashScreenFormController {
                 Thread.sleep(1000);
                 Platform.runLater(() -> {
                     try{
-                        AnchorPane root = FXMLLoader.load(getClass().getResource("/view/LoginForm.fxml"));
+                        AnchorPane root = FXMLLoader.load(getClass().getResource("/view/UserHomeForm.fxml"));
                         Scene loginScene = new Scene(root);
                         Stage stage = (Stage) lblStatus.getScene().getWindow();
                         stage.setScene(loginScene);

@@ -19,22 +19,22 @@ public class SplashScreenFormController {
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
-                Platform.runLater(() -> {
-                    try{
-                        AnchorPane root = FXMLLoader.load(getClass().getResource("/view/UserHomeForm.fxml"));
-                        Scene loginScene = new Scene(root);
-                        Stage stage = (Stage) lblStatus.getScene().getWindow();
-                        stage.setScene(loginScene);
-                        stage.sizeToScene();
-                        stage.centerOnScreen();
-                        stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            Platform.runLater(() -> {
+                try{
+                    AnchorPane root = FXMLLoader.load(getClass().getResource("/view/AdminHomeForm.fxml"));
+                    Scene loginScene = new Scene(root);
+                    Stage stage = (Stage) lblStatus.getScene().getWindow();
+                    stage.setScene(loginScene);
+                    stage.sizeToScene();
+                    stage.centerOnScreen();
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }).start();
     }
 }

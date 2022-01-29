@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="311.0" prefWidth="519.0" style="-fx-background-color: rgba(0,0,0,0); -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SplashScreenFormController">
+    <children>
+        <ImageView fitHeight="255.0" fitWidth="518.0" layoutX="88.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <image>
+                <Image url="@assets/loading (1).gif" />
+            </image>
+        </ImageView>
+        <Rectangle arcHeight="10.0" arcWidth="10.0" height="130.0" layoutY="183.0" stroke="TRANSPARENT" strokeLineCap="ROUND" strokeMiterLimit="0.0" strokeType="INSIDE" strokeWidth="0.0" width="519.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="#fdcb6e" />
+                  <Stop color="#fdcb6e" offset="0.007407407407407408" />
+                  <Stop color="#e84393" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill></Rectangle>
+        <Label layoutX="10.0" layoutY="184.0" prefHeight="66.0" prefWidth="500.0" text="STUDENT ATTENDANCE MARKING SYSTEM" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font name="Ubuntu Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label layoutX="127.0" layoutY="283.0" text="Copyright © 2022 Gihara Wickramatunge">
+            <font>
+                <Font name="FreeMono Bold" size="12.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="4.0" layoutY="247.0" prefHeight="21.0" prefWidth="510.0" text="Initializing..." textAlignment="CENTER">
+         <font>
+            <Font name="Ubuntu Medium" size="18.0" />
+         </font></Label>
+      <Label layoutX="192.0" layoutY="296.0" text="All Rights Reserved">
+         <font>
+            <Font name="FreeMono Bold" size="12.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

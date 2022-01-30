@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 
 public class SplashScreenFormController {
     public Label lblStatus;
+    private File file;  //--------------------------Backup file to store
 
     public void initialize(){
         establishDBConnection();
@@ -45,9 +48,10 @@ public class SplashScreenFormController {
 
     private void loadImportDBForm() {
 //        sleepNow(1000);
-        lblStatus.setText("Database not found. Loading booting window...");
+        lblStatus.setText("Database not found. Loading boot window...");
 //        sleepNow(1000);
         try{
+            SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
             Stage stage = new Stage();
             AnchorPane root = FXMLLoader.load(getClass().getResource("/view/ImportDBForm.fxml"));
             Scene importDBScene = new Scene(root);
@@ -57,7 +61,7 @@ public class SplashScreenFormController {
             stage.sizeToScene();
             stage.centerOnScreen();
             stage.setResizable(false);
-            stage.show();
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Error with database form");

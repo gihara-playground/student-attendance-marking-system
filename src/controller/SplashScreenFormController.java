@@ -15,6 +15,7 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class SplashScreenFormController {
 
     public void establishDBConnection(){
         lblStatus.setText("Establishing database connection...");
-//        sleepNow(3000);
+//        sleep(3000);
         new Thread(() -> {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -39,17 +40,17 @@ public class SplashScreenFormController {
                 e.printStackTrace();
             } catch (SQLException e) {
                 /*Todo: first boot or restoring db*/
-                if (e.getSQLState().equals("42000"))
-                Platform.runLater(this::loadImportDBForm);
-                e.printStackTrace();
+                if (e.getSQLState().equals("42000")){
+                    Platform.runLater(this::loadImportDBForm);
+                }
+                else{
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
 
     private void loadImportDBForm() {
-//        sleepNow(1000);
-        lblStatus.setText("Database not found. Loading boot window...");
-//        sleepNow(1000);
         try{
             SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
             Stage stage = new Stage();
@@ -62,16 +63,39 @@ public class SplashScreenFormController {
             stage.centerOnScreen();
             stage.setResizable(false);
             stage.showAndWait();
+            file = fileProperty.getValue();
+
+            if (file==null){
+                lblStatus.setText("Creating a new database...");
+                new Thread(() -> {
+                    try {
+                        sleep(1000);
+                        Platform.runLater(() -> lblStatus.setText("Loading database script..."));
+
+                        InputStream is = this.getClass().getResourceAsStream("/assets/db-script.sql");
+                        byte[] buffer = new byte[is.available()];
+                        is.read(buffer);
+                        String script = new String(buffer);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }else{
+                /*Todo: Restore the backup*/
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Error with database form");
         }
     }
 
-    private void loadLoginForm() {
-//        sleepNow(1000);
+/*    private void loadLoginForm() {
+//        sleep(1000);
         lblStatus.setText("Loading login form...");
-//        sleepNow(1000);
+//        sleep(1000);
         try{
             AnchorPane root = FXMLLoader.load(getClass().getResource("/view/LoginForm.fxml"));
             Scene loginScene = new Scene(root);
@@ -84,11 +108,11 @@ public class SplashScreenFormController {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Log In not set yet");
         }
-    }
+    }*/
 
-    public void sleepNow(long time){
+    public void sleep(long millis){
         try {
-            Thread.sleep(time);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             new Alert(Alert.AlertType.INFORMATION,"JVM can not be slept");
         }

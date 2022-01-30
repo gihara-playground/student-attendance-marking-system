@@ -84,8 +84,6 @@ public class SplashScreenFormController {
             }else{
                 /*Todo: Restore the backup*/
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Error with database form");

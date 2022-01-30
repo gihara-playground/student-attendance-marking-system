@@ -19,10 +19,11 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class SplashScreenFormController {
     public Label lblStatus;
-    private File file;  //--------------------------Backup file to store
+    private SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
 
     public void initialize(){
         establishDBConnection();
@@ -30,7 +31,6 @@ public class SplashScreenFormController {
 
     public void establishDBConnection(){
         lblStatus.setText("Establishing database connection...");
-//        sleep(3000);
         new Thread(() -> {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -42,8 +42,7 @@ public class SplashScreenFormController {
                 /*Todo: first boot or restoring db*/
                 if (e.getSQLState().equals("42000")){
                     Platform.runLater(this::loadImportDBForm);
-                }
-                else{
+                }else{
                     e.printStackTrace();
                 }
             }
@@ -52,9 +51,13 @@ public class SplashScreenFormController {
 
     private void loadImportDBForm() {
         try{
-            SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
             Stage stage = new Stage();
-            AnchorPane root = FXMLLoader.load(getClass().getResource("/view/ImportDBForm.fxml"));
+
+            FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/ImportDBForm.fxml"));
+            AnchorPane root = fxmlLoader.load();
+            ImportDBFormController controller = fxmlLoader.getController();
+            controller.initFileProperty(fileProperty);
+
             Scene importDBScene = new Scene(root);
             stage.setScene(importDBScene);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -63,26 +66,40 @@ public class SplashScreenFormController {
             stage.centerOnScreen();
             stage.setResizable(false);
             stage.showAndWait();
-            file = fileProperty.getValue();
 
-            if (file==null){
+            if (fileProperty.getValue()==null){
                 lblStatus.setText("Creating a new database...");
                 new Thread(() -> {
                     try {
-                        sleep(1000);
+                        sleep(2000);
                         Platform.runLater(() -> lblStatus.setText("Loading database script..."));
 
                         InputStream is = this.getClass().getResourceAsStream("/assets/db-script.sql");
                         byte[] buffer = new byte[is.available()];
                         is.read(buffer);
                         String script = new String(buffer);
+                        sleep(2000);
 
-                    } catch (IOException e) {
+                        Platform.runLater(() -> lblStatus.setText("Executing database script..."));
+                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306?allowMultiQueries=true","root","root");
+                        Statement stm = connection.createStatement();
+                        stm.execute(script);
+                        connection.close();
+                        sleep(2000);
+
+                        Platform.runLater(() -> lblStatus.setText("Obtaining a new database connection..."));
+                        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_attendance_marking_system","root","root");
+                        sleep(2000);
+
+                        Platform.runLater(() -> lblStatus.setText("Setting up the UI..."));
+
+                    } catch (IOException | SQLException e) {
                         e.printStackTrace();
                     }
                 }).start();
             }else{
                 /*Todo: Restore the backup*/
+                System.out.println("Restoring the backup...");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,9 +108,9 @@ public class SplashScreenFormController {
     }
 
 /*    private void loadLoginForm() {
-//        sleep(1000);
+//        sleep(2000);
         lblStatus.setText("Loading login form...");
-//        sleep(1000);
+//        sleep(2000);
         try{
             AnchorPane root = FXMLLoader.load(getClass().getResource("/view/LoginForm.fxml"));
             Scene loginScene = new Scene(root);

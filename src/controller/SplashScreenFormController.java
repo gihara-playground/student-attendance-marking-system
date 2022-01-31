@@ -1,5 +1,6 @@
 package controller;
 
+import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -95,7 +96,15 @@ public class SplashScreenFormController {
                         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_attendance_marking_system","root","root");
                         sleep(2000);
 
-                        Platform.runLater(() -> lblStatus.setText("Setting up the UI..."));
+                        /* Storing the database connection as a singleton instance */
+                        DBConnection.getInstance().init(connection);
+
+                        /* Redirect to create admin form */
+                        Platform.runLater(() -> {
+                            lblStatus.setText("Setting up the UI...");
+                            loadCreateAdminForm();
+                        });
+
 
                     } catch (IOException | SQLException e) {
                         e.printStackTrace();
@@ -108,6 +117,26 @@ public class SplashScreenFormController {
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Error with database form");
+        }
+    }
+
+    private void loadCreateAdminForm() {
+        try {
+            Stage stage = new Stage();
+            AnchorPane root = FXMLLoader.load(this.getClass().getResource("/view/CreateAdminForm.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Student Attendance System: Create Admin");
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.sizeToScene();
+            stage.show();
+
+            /* Close the splash screen eventually */
+            ((Stage) lblStatus.getScene().getWindow()).close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -36,6 +36,10 @@ public class SplashScreenFormController {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_attendance_marking_system","root","root");
 //                Platform.runLater(this::loadLoginForm);
+                sleep(2000);
+                Platform.runLater(() -> lblStatus.setText("Setting up the UI..."));
+                sleep(2000);
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {

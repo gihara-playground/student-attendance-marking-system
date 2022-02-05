@@ -24,7 +24,7 @@ import java.sql.Statement;
 
 public class SplashScreenFormController {
     public Label lblStatus;
-    private SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
 
     public void initialize(){
         establishDBConnection();
@@ -43,14 +43,12 @@ public class SplashScreenFormController {
                 Platform.runLater(() -> lblStatus.setText("Setting up the UI..."));
                 sleep(2000);
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
+            } catch (SQLException  | ClassNotFoundException e) {
                 /*Todo: first boot or restoring db*/
-                if (e.getSQLState().equals("42000")){
+                if (e instanceof SQLException && ((SQLException) e).getSQLState().equals("42000")){
                     Platform.runLater(this::loadImportDBForm);
                 }else{
-                    e.printStackTrace();
+                    shutdownApp(e);
                 }
             }
         }).start();
@@ -109,7 +107,7 @@ public class SplashScreenFormController {
 
 
                     } catch (IOException | SQLException e) {
-                        e.printStackTrace();
+                        shutdownApp(e);
                     }
                 }).start();
             }else{
@@ -117,8 +115,7 @@ public class SplashScreenFormController {
                 System.out.println("Restoring the backup...");
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR,"Error with database form");
+            shutdownApp(e);
         }
     }
 
@@ -162,12 +159,21 @@ public class SplashScreenFormController {
         }
     }
 
-    public void sleep(long millis){
+    private void sleep(long millis){
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             new Alert(Alert.AlertType.INFORMATION,"JVM can not be slept");
         }
+    }
+
+    private void shutdownApp(Throwable t){
+        Platform.runLater(() -> {
+            lblStatus.setText("Failed to initialize. Shutdown the app...");
+            sleep(2000);
+        });
+        if (t!=null) t.printStackTrace();
+        System.exit(1);
     }
 
 }

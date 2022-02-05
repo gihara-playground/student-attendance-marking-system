@@ -36,7 +36,9 @@ public class SplashScreenFormController {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_attendance_marking_system","root","root");
-//                Platform.runLater(this::loadLoginForm);
+                Platform.runLater(() -> {
+                    loadLoginForm(connection);
+                });
                 sleep(2000);
                 Platform.runLater(() -> lblStatus.setText("Setting up the UI..."));
                 sleep(2000);
@@ -140,23 +142,25 @@ public class SplashScreenFormController {
         }
     }
 
-/*    private void loadLoginForm() {
-//        sleep(2000);
+    private void loadLoginForm(Connection connection) {
+
         lblStatus.setText("Loading login form...");
-//        sleep(2000);
+
         try{
             AnchorPane root = FXMLLoader.load(getClass().getResource("/view/LoginForm.fxml"));
             Scene loginScene = new Scene(root);
             Stage stage = (Stage) lblStatus.getScene().getWindow();
             stage.setScene(loginScene);
+            stage.setTitle("Student Attendance Marking System: Log In");
             stage.sizeToScene();
             stage.centerOnScreen();
+            stage.setResizable(false);
 //            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Log In not set yet");
         }
-    }*/
+    }
 
     public void sleep(long millis){
         try {

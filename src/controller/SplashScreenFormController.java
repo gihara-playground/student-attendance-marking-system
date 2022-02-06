@@ -3,6 +3,7 @@ package controller;
 import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,6 +72,7 @@ public class SplashScreenFormController {
             stage.sizeToScene();
             stage.centerOnScreen();
             stage.setResizable(false);
+            stage.setOnCloseRequest(event -> event.consume()); // Need to select an option before closing. Can't close the window without a selection.
             stage.showAndWait();
 
             if (fileProperty.getValue()==null){
@@ -107,6 +110,8 @@ public class SplashScreenFormController {
 
 
                     } catch (IOException | SQLException e) {
+                        if (e instanceof SQLException)
+                            dropDataBase();
                         shutdownApp(e);
                     }
                 }).start();
@@ -174,6 +179,18 @@ public class SplashScreenFormController {
         });
         if (t!=null) t.printStackTrace();
         System.exit(1);
+    }
+
+    private void dropDataBase(){
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306","root","root");
+            Statement stm = connection.createStatement();
+            stm.execute("DROP DATABASE IF EXISTS student_attendance_marking_system");
+            connection.close();
+        } catch (SQLException e) {
+            shutdownApp(e);
+        }
+
     }
 
 }

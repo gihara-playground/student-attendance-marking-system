@@ -2,6 +2,10 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import security.SecurityContextHolder;
+
+import java.security.Principal;
 
 public class AdminHomeFormController {
 
@@ -11,9 +15,10 @@ public class AdminHomeFormController {
     public Button btnManageUsers;
     public Button btnBackupRestore;
     public Button btnSignOut;
+    public Label lblAdmin;
 
     public void initialize(){
-
+        lblAdmin.setText("Welcome "+ SecurityContextHolder.getPrincipal().getName()+"!");
     }
 
     public void btnRecordAttendance_OnAction(ActionEvent actionEvent) {

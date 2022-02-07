@@ -11,4 +11,6 @@ public class SecurityContextHolder {
     public static void setPrincipal(Principal principal) {
         SecurityContextHolder.principal = principal;
     }
+
+    public static void clear(){principal =null;}
 }

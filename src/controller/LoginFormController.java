@@ -10,6 +10,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import security.Principal;
+import security.SecurityContextHolder;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -39,6 +41,11 @@ public class LoginFormController {
             ResultSet rst = stm.executeQuery();
             if (rst.next()){
                 String path = null;
+                SecurityContextHolder.setPrincipal(new Principal(
+                        txtUserName.getText(),
+                        rst.getString("username"),
+                        Principal.UserRole.valueOf(rst.getString("role"))
+                ));
                 if (rst.getString("role").equals("ADMIN")){
                     path="/view/AdminHomeForm.fxml";
                 }

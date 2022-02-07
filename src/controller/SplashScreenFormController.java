@@ -149,15 +149,17 @@ public class SplashScreenFormController {
         lblStatus.setText("Loading login form...");
 
         try{
+            DBConnection.getInstance().init(connection);
             AnchorPane root = FXMLLoader.load(getClass().getResource("/view/LoginForm.fxml"));
             Scene loginScene = new Scene(root);
-            Stage stage = (Stage) lblStatus.getScene().getWindow();
+            Stage stage = new Stage();
             stage.setScene(loginScene);
             stage.setTitle("Student Attendance Marking System: Log In");
             stage.sizeToScene();
             stage.centerOnScreen();
             stage.setResizable(false);
-//            stage.show();
+            stage.show();
+            ((Stage) lblStatus.getScene().getWindow()).close();
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR,"Log In not set yet");

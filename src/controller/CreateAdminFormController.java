@@ -45,18 +45,24 @@ public class CreateAdminFormController {
 //            stm.execute();
             stm.executeUpdate();
 
-            new Alert(Alert.AlertType.INFORMATION,"Your account has been created successfully.");
+            new Alert(Alert.AlertType.INFORMATION,"Your account has been created successfully.").showAndWait();
+            Thread.sleep(1000);
 
             /* Redirect to the Login Form */
             AnchorPane root = FXMLLoader.load(this.getClass().getResource("../view/LoginForm.fxml"));
             Scene loginScene = new Scene(root);
-            Stage primaryStage = new Stage();
-            primaryStage.setScene(loginScene);
-            primaryStage.setTitle("Student Attendance Marking System: Log In");
-            primaryStage.setResizable(false);
-            primaryStage.centerOnScreen();
-            primaryStage.show();
+            Stage stage = new Stage();
+            stage.setScene(loginScene);
+            stage.setTitle("Student Attendance Marking System: Log In");
+            stage.centerOnScreen();
+            stage.setResizable(false);
+            stage.show();
+            stage.sizeToScene();
+            ((Stage) btnCreateAccount.getScene().getWindow()).close();
         } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please try again").show();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
